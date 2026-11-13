@@ -1,5 +1,5 @@
 <script setup>
-import { getBooks } from '../api/books';
+import { createBook, getBooks } from '../api/books';
 </script> 
 
 <script>
@@ -8,12 +8,23 @@ export default{
     data(){
         return {
             books: [],
-
+            newBook: {
+                title: "",
+                author: "",
+                year: 2000,
+            }
         }
     },
     methods: {
         async loadbooks() {
             this.books = await getBooks();
+        },
+        async addBook(book){
+            await createBook(book);
+            this.loadbooks();
+        },
+        async sumbitCreateBook(){
+            await this.addBook(this.newBook);
         },
     },
     mounted(){
@@ -27,14 +38,29 @@ export default{
         <h1 class="">
             Könyvtár kezelő felület
         </h1>
+        <form @submit.prevent="sumbitCreateBook" action="" class="w-full my-10 border-2 border-stone-200 p-3 flex flex-col rounded-1">
+            <div class="flex flex-col">
+                <label for="title" class="">Könyv cím:</label>
+                <input type="text" name="title" id="" class="border-2 border-stone-200 rounded-lg py-1 px-2" v-model="newBook.title">
+            </div>
+            <div class="flex flex-col">
+                <label for="author">konyv szerzoje</label>
+                <input type="text" name="author" id="" class="border-2 border-stone-200 rounded-lg py-1 px-2" v-model="newBook.author">
+            </div>
+            <div class="flex flex-col">
+                <label for="year" class="">kony megjelenesi eve</label>
+                <input type="number" name="year" id="" class="border-2 border-stone-200 rounded-lg py-1 px-2" v-model="newBook.year">
+            </div>
+            <button type="submit" class="border-2 bg-blue-200 rounded-lg py-1 p-2 mt-4">kaksi</button>
+        </form>
 
         <table class="">
             <thead class="">
                 <tr class="">
-                    <th class="">Azonosito</th>
-                    <th class="">Cim</th>
-                    <th class="">Szerzo</th>
-                    <th class="">Megjelenes ev</th>
+                    <th class="">Azonosito </th>
+                    <th class="">Cim </th>
+                    <th class="">Szerzo </th>
+                    <th class="">Megjelenes ev </th>
                     <th class="">Muveletek</th>
                 </tr>
             </thead>
